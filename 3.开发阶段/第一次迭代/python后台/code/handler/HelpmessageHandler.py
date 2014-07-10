@@ -1,11 +1,14 @@
 import tornado.ioloop
 import tornado.web
 import tornado.httpserver
+import json
 
-class HelpMessageHandler(tornado.web.RequestHandler):
+class HelpmessageHandler(tornado.web.RequestHandler):
 	def get(self):
-		self.write("HelpMessageHandler")
+		self.write("<p>HelpmessageHandler</p><form action='/api/helpmessage' method='post'><input type='submit' value='submit'></form>")
+
 	def post(self):
-		name=self.get_argument("name")
-		msg=self.get_argument("message")
-		result=self.application.dbapi.addEventByUserName()
+		content='{"username":"test1","message":{"kind":1,"content":"TestContent","assist":"TestAssist"}}'
+		jobj=json.loads(content)
+		result=self.application.dbapi.addEventByUserName(jobj["username"],jobj["message"])
+		self.write(str(result))
