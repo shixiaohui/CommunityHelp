@@ -24,7 +24,6 @@ public class LoginActivity extends Activity implements OnClickListener{
 	EditText userEdit,passwdEdit;
 	RelativeLayout loginLayout;
 	Login login;
-	PushSender push;
 	String userEditStr,passwdEditStr;
 	ProgressBar pro;
 	private Map<String,Object> data=new HashMap<String,Object>();
@@ -83,10 +82,9 @@ public class LoginActivity extends Activity implements OnClickListener{
 
         @Override
         protected String doInBackground(Void... params) { 
-        	push=new PushSender(LoginActivity.this);
         	data.put("username", userEditStr); 
             data.put("password", passwdEditStr);
-            return push.sendMessage("login",data);
+            return PushSender.sendMessage("login",data);
         }
         @Override
         protected void onPreExecute() {   
