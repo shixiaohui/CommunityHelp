@@ -13,7 +13,8 @@ class app(tornado.web.Application):
 	def __init__(self):
 		settings = {
 			"static_path": os.path.join(os.path.dirname(__file__), "static"),
-			"debug": True
+			"debug": True,
+			"cookie_secret":"community"
 		}
 		handlers=[(r"/",IndexHandler),
 			(r"/api/login",LoginHandler.LoginHandler),

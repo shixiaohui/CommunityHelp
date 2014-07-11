@@ -4,9 +4,12 @@ import tornado.httpserver
 import json
 
 class SupportmessageHandler(tornado.web.RequestHandler):
+	def get(self):
+		self.write("<p>SupportmessageHandler</p><form action='/api/supportmessage' method='post'><input type='submit' value='submit'></form>")
+
 	def post(self):
-		#content = self.get_argument("content")
-		content = '{"username": "ooo","eventid": 1,"assist": "ssssssssssssssss"}'
+		#content =self.request.body
+		content = '{"username": "ooo","eventid": 3,"assist": "ssssssssssssssss"}'
 		j = json.loads(content)
 		us = self.application.dbapi.getUserByUserName(j['username'])
 		if(us is None):

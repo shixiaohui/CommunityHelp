@@ -33,6 +33,37 @@ class dbapi:
 		cursor.close()
 		return result
 
+	def updateUserstate(self,uid,state):
+		cursor = self.db.cursor()
+		sql = "update user set state = %s where id = %s"
+		param =(state,uid)
+		cursor.execute(sql,param)
+		self.db.commit()
+		cursor.close()
+		return
+
+
+
+	def CheckRelationbyId(self,userid):
+		cursor=self.db.cursor(cursorclass=MySQLdb.cursors.DictCursor)
+		sql="select * from relation where usrid=%s"
+		param=(userid,)
+		cursor.execute(sql,param)
+		result=cursor.fetchall()
+		cursor.close()
+		return result
+
+	def getUsermassegeByUserId(self,userid):
+		cursor=self.db.cursor(cursorclass=MySQLdb.cursors.DictCursor)
+		sql="select * from user ,info where user.id=%s and info.id=%s"
+		param=(userid,userid)
+		#sql="select * from user where user.id=%s"
+		#param=(userid)
+		cursor.execute(sql,param)
+		result=cursor.fetchone()
+		cursor.close()
+		return result
+
 	def getEventByEventId(self,eventid):
 		cursor=self.db.cursor(cursorclass=MySQLdb.cursors.DictCursor)
 		sql="select * from event where id=%s"
@@ -191,21 +222,46 @@ class dbapi:
 		cursor=self.db.cursor(cursorclass=MySQLdb.cursors.DictCursor)
 		sql="INSERT INTO relation (usrid, cid, kind) VALUES ('" + u_id + "', '" + r_id + "', '1')"
 		cursor.execute(sql)
+		self.db.commit()
 		cursor.close()
 
 	def addaidhelper(self, u_name, e_id):
 		result = self.getUserByUserName(u_name)
 		u_id = str(result["id"])
 		result = self.getEventByEventId(e_id)
-		if result["state"] == 0:
-			return "0"
+		if(self.checkifUseraddHelper(u_id,e_id) is not None):
+			print "already add in,do not need add agagin"
+			return "2"
+		if result["state"] == 1:
+			print "current has benn end"
+			return "3"
 		else:
 			cursor=self.db.cursor(cursorclass=MySQLdb.cursors.DictCursor)
 			sql="INSERT INTO helper (eid, usrid) VALUES ('" + e_id + "', '" + u_id + "')"
 			cursor.execute(sql)
+			self.db.commit()
 			cursor.close()
+			print "user " +u_name +" add in "+ e_id
 			return "1"
-	'''.'''
+
+	def checkifUseraddHelper(self,userid,eventid):
+		cursor=self.db.cursor(cursorclass=MySQLdb.cursors.DictCursor)
+		sql="select * from helper where eid=%s and usrid = %s"
+		param=(eventid,userid)
+		cursor.execute(sql,param)
+		result=cursor.fetchone()
+		print result
+		return result
+
+	def deleteHelperbyUidEid(self,uid,eid):
+		cursor=self.db.cursor()
+		sql="delete from helper where eid = %s and usrid = %s"
+		param=(eid,uid)
+		cursor.execute(sql,param)
+		self.db.commit()
+		cursor.close()
+		return
+
 
 	#Anton Zhong
 	def getUserIdByUserName(self,username):
@@ -221,10 +277,10 @@ class dbapi:
 		usrid=self.getUserIdByUserName(username)
 		cursor=self.db.cursor(cursorclass=MySQLdb.cursors.DictCursor)
 		if(not usrid):
-			return {"errorCode":403,"errorDesc":"No Such User: "+username}
+			return {"state":2,"errorDesc":"No Such User: "+username}
 		else:
 			if(not("kind" in message and "content" in message)):
-				return {"errorCode":403,"errorDesc":"Messge Incomplete"}
+				return {"state":3,"errorDesc":"Messge Incomplete"}
 			else:
 				sql="insert into event (usrid,kind,state,content) values (%s,%s,%s,%s)"
 				param=(usrid["id"],message["kind"],0,message["content"])
@@ -236,7 +292,7 @@ class dbapi:
 
 				#return last insert id
 				cursor.execute("select last_insert_id()")
-				return {"errorCode":200,"errorDesc":"","eventid":cursor.fetchone()["last_insert_id()"]}
+				return {"state":1,"errorDesc":"","eventid":cursor.fetchone()["last_insert_id()"]}
 		cursor.close()
 
 	#07/09
