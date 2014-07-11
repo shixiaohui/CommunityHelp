@@ -1,15 +1,17 @@
 import tornado.ioloop
 import tornado.web
 import tornado.httpserver
+import json
 
 class EventHandler(tornado.web.RequestHandler):
 	def get(self):
-		self.write("eventHandler")
+		self.write("<p>eventHandler</p><form action='/api/event' method='post'><input type='submit' value='submit'></form>")
+
 	def post(self):
-		name=self.get_argument("name")
-		iden=self.get_argument("id")
-		event=self.application.dbapi.getEventByEventId(iden)
+		content='{"eventid":1}'
+		jobj=json.loads(content)
+		event=self.application.dbapi.getEventByEventId(jobj['eventid'])
 		if(event):
 			self.write(str(event))
 		else:
-			self.write("No event for id "+str(iden))
+			self.write("No event for eventid: "+str(jobj['eventid']))
