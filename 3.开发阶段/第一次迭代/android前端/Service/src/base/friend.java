@@ -1,4 +1,4 @@
-package base;
+ package base;
 
 //表示用户列表中的每一个条目
 public class friend { 

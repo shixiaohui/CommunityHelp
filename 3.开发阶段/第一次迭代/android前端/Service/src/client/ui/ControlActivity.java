@@ -18,7 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import fragment.FriendFragment;
 import fragment.HelpFragment;
-import fragment.MessageFragment;
+
 
 public class ControlActivity extends FragmentActivity implements
 		ActionBar.TabListener {
@@ -80,7 +80,6 @@ public class ControlActivity extends FragmentActivity implements
 		
 		fragments=new ArrayList<Fragment>();
 		fragments.add(new HelpFragment());
-		fragments.add(new MessageFragment());
 		fragments.add(new FriendFragment());
 	}
 
@@ -115,6 +114,9 @@ public class ControlActivity extends FragmentActivity implements
 		switch(item.getItemId()){
 			case R.id.action_settings: 	
 				startActivity(new Intent(ControlActivity.this,SetupActivity.class));
+				break;
+			case R.id.menu_add: 	
+				startActivity(new Intent(ControlActivity.this,SearchfriendActivity.class));
 				break;
 				
 			case R.id.menu_refresh:
