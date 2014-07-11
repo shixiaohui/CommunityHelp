@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/table_shape" 
     android:orientation="vertical" >
     
     <LinearLayout
@@ -12,8 +13,8 @@
 	    <ImageView 
 	        android:layout_margin="5dp"
 	        android:id="@+id/imageItem1"
-	        android:layout_width="50dp"
-	        android:layout_height="50dp"/>
+	        android:layout_width="60dp"
+	        android:layout_height="60dp"/>
 	    
 	    <LinearLayout
 		    android:layout_width="match_parent"
@@ -22,14 +23,14 @@
 		    
 		    <TextView 
 		        android:id="@+id/nameItem1"
-		        android:textSize="20sp"
+		        android:textSize="25sp"
 		        android:layout_marginTop="5dp"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"/>
 	        
 		    <TextView 
 		        android:id="@+id/timeItem1"
-		        android:textSize="12sp"
+		        android:textSize="14sp"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"/>
 	    </LinearLayout>
@@ -40,7 +41,7 @@
         android:id="@+id/contentItem1"
         android:layout_marginRight="5dp"
         android:layout_marginLeft="5dp"
-        android:textSize="15sp"
+        android:textSize="20sp"
         android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"/>
  	
