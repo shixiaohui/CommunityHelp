@@ -63,7 +63,21 @@
         <activity
             android:name="client.ui.aboutYiZhu" >
         </activity>
-        
+        <activity
+            android:name="client.ui.SearchfriendActivity" >
+        </activity>
+        <activity
+            android:name="client.ui.Findfriendresult" >
+        </activity>
+        <activity
+            android:name="client.ui.DetailMessageActivity" >
+        </activity>
+        <activity
+            android:name="client.ui.FriendInfoActivity" >
+        </activity>
+        <activity
+            android:name="client.ui.Nearpeople" >
+        </activity>
         <!-- 推送模块配置开始 -->
         <!-- 配置第三方参数属性 -->
         <meta-data
