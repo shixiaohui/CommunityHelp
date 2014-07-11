@@ -4,35 +4,14 @@
 		<title>Test</title>
 	</head>
 	<body>
-		<form action="/api/login" method="post">
+		<form action="/api/finish" method="post">
 			<label for='username'>User Name: </label>
-			<input type='text' id='content' name='content'>
+			<input type='text' id='username' name='username'>
 			<label for='password'>Password: </label>
-			<input type='text' id='password' name='password'>
+			<input type='text' id='passwd' name='passwd'>
 			<label for='password_confirm'>Confirm Password: </label>
 			<input type='text' id='password_confirm' name='password_confirm'>
 			<input type='submit' value='submit' id='submit'>
 		</form>
-
-		<!-- Yeqin Zheng, 09/07/2014 -->
-		/api/addrelatives
-		<form action="/api/addrelatives" method="post">
-			<label for='userid'>User name: </label>
-			<input type='text' id='u_name' name='u_name'>
-			<label for='rid'>Relative name: </label>
-			<input type='text' id='r_name' name='r_name'>
-			<input type='submit' value='submit' id='submit'>
-		</form>
-
-		/api/deleterelatives
-		<form action="/api/deleterelatives" method="post">
-			<label for='userid'>User name: </label>
-			<input type='text' id='u_name' name='u_name'>
-			<label for='rid'>Relative name: </label>
-			<input type='text' id='r_name' name='r_name'>
-			<input type='submit' value='submit' id='submit'>
-		</form>
-		<!-- *-* -->
-
 	</body>
 </html>
