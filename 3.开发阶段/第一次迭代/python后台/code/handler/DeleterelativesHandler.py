@@ -11,17 +11,17 @@ class DeleterelativesHandler(tornado.web.RequestHandler):
 		self.write("<p>DeleterelativesHandler</p><form action='/api/deleterelatives' method='post'><input type='submit' value='submit'></form>")
 
 	def post(self):
-		#self.write(u_id + r_id)
-		#u_name = self.get_argument('u_name')
-		#r_name = self.get_argument('r_name')
-		content = '{"username1":"ooo","username2":"oo11o"}'
+		#content =self.request.body
+		content = '{"username1":"ooo","username2":"11oo"}'
 		j = json.loads(content)
 		row = self.application.dbapi.getRelationByUsername(j['username1'],j['username2'])
-		#self.write(row2)
 		if row == 0 :
 			delete_message = {'state': 0}
+			print "two has no relations"
 		else :
 			self.application.dbapi.deleteRelationByUsername(j['username1'],j['username2'])
+			print "delete relations success"
 			delete_message = {'state': 1}
 
 		self.write(delete_message)
+		return
