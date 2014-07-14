@@ -7,10 +7,12 @@ import json
 ''' Add a helper to an event. Succeed with "1" returned, else with "0". '''
 
 class AddaidHandler(tornado.web.RequestHandler):
-		def post(self):
-			u_name = self.get_argument('u_name')
-			e_id = self.get_argument('e_id')
+	def get(self):
+		self.write("<p>AddaidHandler</p><form action='/api/addaid' method='post'><input type='submit' value='submit'></form>")
+	def post(self):
+		#content =self.request.body
+		content = '{"username":"oo11o","eventid":"4"}'
+		j = json.loads(content)
 
-			result = self.application.dbapi.addaidhelper(u_name, e_id)
-			self.write("{'state': " + result + "}")
-
+		result = self.application.dbapi.addaidhelper(j['username'], j['eventid'])
+		self.write("{'state': " + result + "}")

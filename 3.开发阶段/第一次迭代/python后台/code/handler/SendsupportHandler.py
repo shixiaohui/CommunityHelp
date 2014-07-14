@@ -8,6 +8,7 @@ class SendsupportHandler(tornado.web.RequestHandler):
 		self.write("<p>SendsupportHandler</p><form action='/api/sendsupport' method='post'><input type='submit' value='submit'></form>")
 
 	def post(self):
+		#content =self.request.body
 		content='{"username":"Anton","eid":4,"message":{"content":"TestContent"}}'
 		jobj=json.loads(content)
 		result=self.application.dbapi.addSupportByEventIdAndUserName(jobj["eid"],jobj["username"],jobj["message"])
