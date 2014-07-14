@@ -18,7 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import fragment.FriendFragment;
 import fragment.HelpFragment;
-
+import fragment.MessageFragment;
 
 public class ControlActivity extends FragmentActivity implements
 		ActionBar.TabListener {
@@ -80,6 +80,7 @@ public class ControlActivity extends FragmentActivity implements
 		
 		fragments=new ArrayList<Fragment>();
 		fragments.add(new HelpFragment());
+		fragments.add(new MessageFragment());
 		fragments.add(new FriendFragment());
 	}
 
