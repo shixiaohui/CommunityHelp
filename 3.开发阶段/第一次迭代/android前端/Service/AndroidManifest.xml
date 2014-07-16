@@ -92,6 +92,7 @@
         <activity
             android:name="client.ui.LoginActivity"
             android:label="@string/title_activity_main" >
+            
         </activity>
         <activity
             android:name="client.ui.ControlActivity"
@@ -111,7 +112,13 @@
             android:name="client.ui.Feekback" >
         </activity>
         <activity
+            android:name="client.ui.HistoryActivity" >
+        </activity>
+        <activity
             android:name="client.ui.aboutYiZhu" >
+        </activity>
+        <activity
+            android:name="client.ui.CloseActivity" >
         </activity>
         <activity
             android:name="client.ui.SendHelpMsgActivity" 
@@ -147,9 +154,8 @@
         <activity
             android:name="routeplan.RoutePlan"
             android:configChanges="orientation|keyboardHidden">
-            
+           
         </activity>
-        
         
         <!-- 推送模块配置开始 -->
         <!-- 配置第三方参数属性 -->
