@@ -104,7 +104,6 @@ public class LoginActivity extends Activity implements OnClickListener{
         		Toast.makeText(LoginActivity.this,"连接服务器失败", Toast.LENGTH_SHORT).show();
             	pro.setVisibility(View.INVISIBLE);
         	}
-            super.onPostExecute(result);
             try {
             	switch (new JSONObject(result).getInt("state")) {
             	case 1:
