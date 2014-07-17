@@ -8,11 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import client.ui.CloseActivity;
 import client.ui.R;
+import client.ui.SendHelpMsgActivity;
 
 public class BottomButtonFragment extends Fragment {
 	private View messageLayout;
-	private Button navigation;
+	private Button navigation,close,help;
     public void onCreate(Bundle savedInstanceState)
     {
         // TODO Auto-generated method stub
@@ -30,6 +32,26 @@ public class BottomButtonFragment extends Fragment {
 	        	startActivity(new Intent(getActivity(),RoutePlan.class));
 	        }
 	    });
+	    close=(Button)messageLayout.findViewById(R.id.button_conclude);
+	    close.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				startActivity(new Intent(getActivity(),CloseActivity.class));
+			}
+		});
+	    
+	    help=(Button)messageLayout.findViewById(R.id.button_assist);
+	    help.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				startActivity(new Intent(getActivity(),SendHelpMsgActivity.class));
+			}
+		});
+	    
         return messageLayout;
 	}
 	
