@@ -5,7 +5,7 @@
         android:id="@+id/menu_refresh"
         android:icon="@drawable/ic_menu_refresh_holo_light"
         android:showAsAction="ifRoom"
-        android:title="帅新"/>
+        android:title="刷新"/>
     <!-- 添加按钮图标 -->
     <item
         android:id="@+id/menu_add"
