@@ -1,63 +1,162 @@
 package client.ui;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.res.Resources.NotFoundException;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
+import android.widget.ImageView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
+
+import communicate.PushConfig;
+import communicate.PushSender;
 
 public class LoginActivity extends Activity implements OnClickListener{
-	Button loginBtn,forgetPasswdBtn;
-	EditText userEdit,passwdEdit;
-	RelativeLayout loginLayout;
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.login);
-        loginBtn = (Button)findViewById(R.id.login_login_btn);
-        loginBtn.setOnClickListener(this);//注册监听器  一定不能忘
-        passwdEdit = (EditText)findViewById(R.id.login_passwd_edit);
-        userEdit = (EditText)findViewById(R.id.login_user_edit);
-        forgetPasswdBtn = (Button)findViewById(R.id.forget_passwd);
-        forgetPasswdBtn.setOnClickListener(this);
-        loginLayout = (RelativeLayout)findViewById(R.id.login_layout);
-    }
+	private ImageView loginLogo,login_more;
+	private EditText loginaccount,loginpassword;
+	private ToggleButton isShowPassword;
+	private boolean isDisplayflag=false;
+	private String getpassword;
+	private Button loginBtn,register;
+	private Intent mIntent;
+	private Login login;
+	private String username;
+	private String password;
+	private Map<String,Object> data=new HashMap<String,Object>();
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		setContentView(R.layout.login);
+		
+		
+		loginLogo=(ImageView)this.findViewById(R.id.logo);
+		login_more=(ImageView)this.findViewById(R.id.login_more);
+		loginaccount=(EditText)this.findViewById(R.id.loginaccount);
+		loginpassword=(EditText)this.findViewById(R.id.loginpassword);
+		
+		isShowPassword=(ToggleButton)this.findViewById(R.id.isShowPassword);
+		loginBtn=(Button)this.findViewById(R.id.login);
+		register=(Button)this.findViewById(R.id.register);
+		
+		getpassword=loginpassword.getText().toString();
+		PushConfig.init(this);
+		init();
+	}
+	protected void init() {
+		isShowPassword.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if(isChecked){
+					loginpassword.setInputType(0x90);    
+					//loginpassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+				}else{
+					loginpassword.setInputType(0x81); 
+					//loginpassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+				}
+			}
+		});
+	
+		register.setOnClickListener(this);
+		loginBtn.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				login=new Login();
+				login.execute();
+				startActivity(new Intent(LoginActivity.this,ControlActivity.class));
+			}
+		});
+	
+	}
+
 	@Override
 	public void onClick(View v) {
-		int viewId = v.getId();
-		switch (viewId) {
-		case R.id.login_login_btn://点击登录按钮   进行判断  用户名和密码是否为空
-			String userEditStr = userEdit.getText().toString().trim();
-			String passwdEditStr = passwdEdit.getText().toString().trim();
-			/*if(("".equals(userEditStr) || null == userEditStr) || 
-					("".equals(passwdEditStr) || null == passwdEditStr)){//只要用户名和密码有一个为空
-				new AlertDialog.Builder(LoginActivity.this)
-				.setIcon(getResources().getDrawable(R.drawable.login_error_icon))
-				.setTitle("登录失败")
-				.setMessage("微信账号或密码不能为空，请输入微信账号或密码")
-				.create().show();
-			}
-			else{*/
-				Intent intent=new Intent(LoginActivity.this,ControlActivity.class);
-				startActivity(intent);
-			//}
-			break;
-		case R.id.forget_passwd://点击  “忘记密码” 这个文本
-			break;
+		switch (v.getId()) {
+			case R.id.register:
+					mIntent=new Intent(LoginActivity.this, RegisterActivity.class);
+					startActivity(mIntent);
+					break;
+		
+			case R.id.login:
+					
+					break;
+				
+			default:
+					break;
 		}
 	}
+	
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.login, menu);
 		return true;
 	}
+	
+	private class Login extends AsyncTask<Void, Void, String> {
 
+        @Override
+        protected String doInBackground(Void... params) { 
+        	data.put("username","dfsd"); 
+            data.put("password","sadas");
+            return PushSender.sendMessage("login",data);
+        }
+        @Override
+        protected void onPreExecute() {   
+        	
+        }
+        @Override
+        protected void onPostExecute(String result) {   	
+        	if(result.equals("network error")){
+        		Toast.makeText(LoginActivity.this,"您还没有联网", Toast.LENGTH_SHORT).show();
+            	//pro.setVisibility(View.INVISIBLE);
+        	}
+        	if(result.equals("error")){
+        		Toast.makeText(LoginActivity.this,"连接服务器失败", Toast.LENGTH_SHORT).show();
+            	//pro.setVisibility(View.INVISIBLE);
+        	}
+            try {
+            	switch (new JSONObject(result).getInt("state")) {
+            	case 1:
+            		Toast.makeText(LoginActivity.this, "用户不存在", Toast.LENGTH_SHORT).show();
+            		break;
+            	case 2:
+            		Toast.makeText(LoginActivity.this, "密码错误", Toast.LENGTH_SHORT).show();
+            		break;
+            	case 3:
+            		Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
+            		break;
+            	default:
+            		Toast.makeText(LoginActivity.this, "服务器错误", Toast.LENGTH_SHORT).show();
+            	}
+			} catch (NotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            super.onPostExecute(result);
+        }
+    }
 }
