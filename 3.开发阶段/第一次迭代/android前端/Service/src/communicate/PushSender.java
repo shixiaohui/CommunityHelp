@@ -16,6 +16,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Base64;
+import android.util.Log;
 
 public class PushSender {
 	
@@ -51,6 +52,7 @@ public class PushSender {
 	 */
 	public static String sendMessage(String action, Map<String, Object> map, int connection_timeout, int read_timeout) {
 		if (isNetworkConnected()) {
+			Log.i("HttpPost", "prepare for data");
 			// 数据预处理
 			Iterator<String> ite = map.keySet().iterator();
 			String key;

@@ -35,17 +35,17 @@ public class GetuiSdkHttpPost {
 				urlConn.setReadTimeout(READ_TIMEOUT);
 
 				urlConn.connect(); // 连接既往服务端发送消息
+				Log.i("HttpPost", "connected to server");
 
 				DataOutputStream dop = new DataOutputStream(urlConn.getOutputStream());
-				for (int i = 0; i < param.length(); i++) {
-					Log.i("test",Integer.toString(i));
-					dop.write(param.substring(i, i + 1).getBytes("utf-8"));
-				}
+				dop.write(param.getBytes("utf-8"));
+				Log.i("HttpPost", "sending data");
 				dop.flush(); // 发送，清空缓存
 				dop.close(); // 关闭
 
 				// 下面开始做接收工作
 				BufferedReader bufferReader = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
+				Log.i("HttpPost", "sending finished");
 				String result = ""; // 获取服务器返回数据
 				String readLine = null;
 				while ((readLine = bufferReader.readLine()) != null) {
