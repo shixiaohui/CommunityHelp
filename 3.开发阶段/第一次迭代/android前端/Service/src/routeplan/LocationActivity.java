@@ -1,112 +1,61 @@
 package routeplan;
 
-//import com.baidu.baidulocationdemo.LocationApplication.MyLocationListener;
 import android.app.Activity;
-import android.app.Service;
 import android.os.Bundle;
-import android.os.Vibrator;
-import android.util.Log;
-import android.widget.TextView;
-import client.ui.R;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
-import com.baidu.location.GeofenceClient;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
-import com.baidu.location.LocationClientOption.LocationMode;
 
+public class LocationActivity extends Activity {
 
-public class LocationActivity extends Activity{
-	private LocationClient mLocationClient;
-	private TextView ModeInfor;
-	//private Button startLocation;
-
-
-	private LocationMode tempMode = LocationMode.Hight_Accuracy;
-	private String tempcoor="bd09ll";
 	
-	//public LocationClient mLocationClient;
-	public GeofenceClient mGeofenceClient;
-	public MyLocationListener mMyLocationListener;
 	
-	public TextView mLocationResult,logMsg;
-	public TextView trigger,exit;
-	public Vibrator mVibrator;
+	public double mLat1=1.1;
+	public double mLon1;
+
+	LocationClient mLocClient;
+	public MyLocationListenner myListener;
+	boolean isFirstLoc = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.location);
 		
-		//super.onCreate();
-		mLocationClient = new LocationClient(this.getApplicationContext());
-		mMyLocationListener = new MyLocationListener();
-		mLocationClient.registerLocationListener(mMyLocationListener);
-		mGeofenceClient = new GeofenceClient(getApplicationContext());
-		mVibrator =(Vibrator)getApplicationContext().getSystemService(Service.VIBRATOR_SERVICE);
-		
-		
-		//mLocationClient = ((LocationApplication)getApplication()).mLocationClient;
-		// ***************************
-		
-		mLocationResult = (TextView)findViewById(R.id.locatextView);
-		ModeInfor= (TextView)findViewById(R.id.modeinfor);
-
-		
-		 
-		 InitLocation();
-		 mLocationClient.start();
-		 mLocationClient.stop();
-		
-	}
-	
-	
-	private void InitLocation(){
+		myListener = new MyLocationListenner();
+		mLocClient = new LocationClient(this);
+		mLocClient.registerLocationListener(myListener);
 		LocationClientOption option = new LocationClientOption();
-		option.setLocationMode(tempMode);//���ö�λģʽ
-		option.setCoorType(tempcoor);//���صĶ�λ����ǰٶȾ�γ�ȣ�Ĭ��ֵgcj02
-		int span=1000;
-		
-		option.setScanSpan(span);//���÷���λ����ļ��ʱ��Ϊ1000ms
-		
-		option.setIsNeedAddress(true);
-		mLocationClient.setLocOption(option);
+		option.setOpenGps(true);
+		option.setCoorType("bd09ll"); 
+		option.setScanSpan(1000);
+		mLocClient.setLocOption(option);
+		mLocClient.start();
+
 	}
-	
-	public class MyLocationListener implements BDLocationListener {
+	/**
+	 * 定位SDK监听函数
+	 */
+	public class MyLocationListenner implements BDLocationListener {
 
 		@Override
 		public void onReceiveLocation(BDLocation location) {
-			//Receive Location 
-			StringBuffer sb = new StringBuffer(256);
 			
-			sb.append("time : ");
-			sb.append(location.getTime());
-			sb.append("\nlatitude : ");
-			sb.append(location.getLatitude());
-			sb.append("\nlontitude : ");
-			sb.append(location.getLongitude());
-		
-			logMsg(sb.toString());
-			Log.i("BaiduLocationApiDem", sb.toString());
+			  mLat1=location.getLatitude();
+			  mLon1=location.getLongitude();
 		}
 
-
-	}
-	
-	
-	/**
-	 * ��ʾ�����ַ�
-	 * @param str
-	 */
-	public void logMsg(String str) {
-		try {
-			if (mLocationResult != null)
-				mLocationResult.setText(str);
-		} catch (Exception e) {
-			e.printStackTrace();
+		public void onReceivePoi(BDLocation poiLocation) {
 		}
 	}
+	
+	public double GetLatitude(){
+		return mLat1;
+	}
+	
+	public double Getlongtitude(){
+		return mLon1;
+	}
+	
 }

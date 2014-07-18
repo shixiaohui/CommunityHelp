@@ -68,7 +68,7 @@
 		    android:layout_height="35dp"
 		    android:textSize="12sp"
 		    android:layout_weight="0"
-		    android:text="帮助"/>
+		    android:text="查看"/>
 	</LinearLayout>
 	
 </LinearLayout>
