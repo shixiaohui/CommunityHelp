@@ -1,6 +1,6 @@
 package fragment;
 
-import routeplan.RoutePlan;
+import routeplan.NaviDemo;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -39,7 +39,7 @@ public class BottomButtonFragment extends Fragment {
 	    navigation.setOnClickListener(new View.OnClickListener() {
 	        @Override
 	        public void onClick(View v){
-	        	startActivity(new Intent(getActivity(),RoutePlan.class));
+	        	startActivity(new Intent(getActivity(),NaviDemo.class));
 	        }
 	    });
 	    

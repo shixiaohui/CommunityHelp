@@ -6,6 +6,10 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import otherlogin.Platform;
+import otherlogin.SinaWeibo.StateSwitchExecption;
+import otherlogin.ThirdPartyPlatform;
+import routeplan.LocationActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources.NotFoundException;
@@ -20,6 +24,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -37,6 +42,8 @@ public class LoginActivity extends Activity implements OnClickListener{
 	private Login login;
 	private String username;
 	private String password;
+	private TextView otherlogin;
+	private LocationActivity lo=new LocationActivity();
 	private Map<String,Object> data=new HashMap<String,Object>();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,18 +52,32 @@ public class LoginActivity extends Activity implements OnClickListener{
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.login);
 		
-		
+		ThirdPartyPlatform.init(this);
 		loginLogo=(ImageView)this.findViewById(R.id.logo);
 		login_more=(ImageView)this.findViewById(R.id.login_more);
 		loginaccount=(EditText)this.findViewById(R.id.loginaccount);
 		loginpassword=(EditText)this.findViewById(R.id.loginpassword);
+		otherlogin=(TextView)findViewById(R.id.login_otherpassword);
+		otherlogin.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Platform weibo = ThirdPartyPlatform.getPlatform(ThirdPartyPlatform.SINAWEIBO);
+				try {
+					weibo.login();
+				} catch (StateSwitchExecption e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
 		
 		isShowPassword=(ToggleButton)this.findViewById(R.id.isShowPassword);
 		loginBtn=(Button)this.findViewById(R.id.login);
 		register=(Button)this.findViewById(R.id.register);
-		
-		getpassword=loginpassword.getText().toString();
 		PushConfig.init(this);
+		getpassword=loginpassword.getText().toString();
 		init();
 	}
 	protected void init() {
@@ -86,6 +107,7 @@ public class LoginActivity extends Activity implements OnClickListener{
 			}
 		});
 	
+		loginaccount.setText(Double.toString(lo.GetLatitude()));
 	}
 
 	@Override
@@ -117,8 +139,8 @@ public class LoginActivity extends Activity implements OnClickListener{
 
         @Override
         protected String doInBackground(Void... params) { 
-        	data.put("username","dfsd"); 
-            data.put("password","sadas");
+        	data.put("username",loginaccount.getText().toString().trim()); 
+            data.put("password",loginpassword.getText().toString().trim());
             return PushSender.sendMessage("login",data);
         }
         @Override
@@ -145,6 +167,8 @@ public class LoginActivity extends Activity implements OnClickListener{
             		break;
             	case 3:
             		Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
+            		PushSender.sendClientId();
+            		PushConfig.username = loginaccount.getText().toString().trim();
             		break;
             	default:
             		Toast.makeText(LoginActivity.this, "服务器错误", Toast.LENGTH_SHORT).show();
