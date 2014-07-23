@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 import client.ui.AssistTipsActivity;
 import client.ui.R;
 
@@ -46,10 +47,10 @@ public class PushReceiver extends BroadcastReceiver {
 				try {
 					JSONObject json = new JSONObject(data);
 					String type = json.getString("type");
-					JSONObject message = json.getJSONObject("data");
+					Toast.makeText(PushConfig.applicationContext, data, Toast.LENGTH_SHORT).show();
 					if (type.equals("help")) {
 						// 求助信息
-						showNotification(message.getString("user"), message.getString("content"), new Intent(PushConfig.applicationContext, AssistTipsActivity.class));
+						showNotification("收到求助信息", "您有未读的求助信息", AssistTipsActivity.class);
 					} else if (type.equals("aid")) {
 						// 援助信息
 					} else if (type.equals("endhelp")) {
@@ -75,7 +76,8 @@ public class PushReceiver extends BroadcastReceiver {
 		}
 	}
 	
-	public static void showNotification(String title, String content, Intent intent) {
+	public static void showNotification(String title, String content, Class<?> cls) {
+		Intent intent = new Intent(PushConfig.applicationContext, cls);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		PendingIntent contentIntent = PendingIntent.getBroadcast(PushConfig.applicationContext, 0, intent, 0);
 		
@@ -91,4 +93,5 @@ public class PushReceiver extends BroadcastReceiver {
 		NotificationManager notifier = (NotificationManager) PushConfig.applicationContext.getSystemService(Context.NOTIFICATION_SERVICE);
 		notifier.notify(1, notice);
 	}
+	
 }
