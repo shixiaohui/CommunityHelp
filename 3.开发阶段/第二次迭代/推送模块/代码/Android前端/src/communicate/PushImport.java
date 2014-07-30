@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import client.ui.R;
 import adapter.AssistListViewAdapter;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -14,6 +13,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import client.ui.R;
 import fragment.MessageFragment;
 
 public class PushImport {
@@ -42,13 +42,14 @@ public class PushImport {
 		}
 	}
 	
-	public void controlOnStart() {
+	public void controlOnResume() {
 		PushConfig.helpmessage = PushConfig.aidmessage = 0;
+		PushConfig.endevents.clear();
 		PushConfig.clearNotification(activity, PushConfig.NOTIFICATION_EVENT);
 		PushConfig.notifyevent = false;
 	}
 	
-	public void controlOnStop() {
+	public void controlOnPause() {
 		PushConfig.notifyevent = true;
 	}
 	
@@ -56,13 +57,14 @@ public class PushImport {
 		activity.unregisterReceiver(receiver);
 	}
 	
-	public void detailOnCreate(final Bundle bundle, final List<Map<String, Object>> datalist, final AssistListViewAdapter assistListViewAdapter) {
-		PushConfig.eventid = Integer.parseInt(bundle.getString("eid"));
+	public void detailOnCreate(final List<Map<String, Object>> datalist, final AssistListViewAdapter assistListViewAdapter) {
 		receiver = new BroadcastReceiver() {
 
 			@Override
 			public void onReceive(Context context, Intent intent) {
 				Bundle bundle = intent.getExtras();
+				if (activity.getIntent().getExtras().getString("eid").equals(bundle.getString("eventid")))
+					return;
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("image",  R.drawable.img01);
 				map.put("name", bundle.getString("username"));
@@ -74,10 +76,20 @@ public class PushImport {
 		};
 		IntentFilter filter = new IntentFilter("aidmessage");
 		activity.registerReceiver(receiver, filter);
+		
+	}
+	
+	public void detailOnResume(Bundle bundle) {
+		PushConfig.eventid = Integer.parseInt(bundle.getString("eid"));
+		PushConfig.helpmessage = PushConfig.aidmessage = 0;
+		PushConfig.clearNotification(activity, PushConfig.NOTIFICATION_EVENT);
+	}
+	
+	public void detailOnPause() {
+		PushConfig.eventid = -1;
 	}
 	
 	public void detailOnDestroy() {
-		PushConfig.eventid = -1;
 		activity.unregisterReceiver(receiver);
 	}
 	

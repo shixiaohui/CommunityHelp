@@ -1,11 +1,16 @@
 package communicate;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.app.Notification;
+import android.app.Notification.Builder;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import client.ui.R;
 
 import com.igexin.sdk.PushManager;
@@ -20,6 +25,9 @@ public class PushConfig {
 	
 	public static final int NOTIFICATION_EVENT = 0; // 事件系列通知
 	public static final int NOTIFICATION_FRIEND = 1; // 好友系列通知
+	public static final int NOTIFICATION_END_EVENT = 2; // 结束事件通知
+	
+	public static List<String> endevents = new ArrayList<String>();
 	
 	public static int helpmessage = 0; // 未读求助信息的条数，用于在通知栏显示
 	public static int aidmessage = 0; // 未读援助信息的条数，用于在通知栏显示
@@ -56,14 +64,22 @@ public class PushConfig {
 	 * @param content
 	 * @param intent
 	 */
-	@SuppressWarnings("deprecation")
 	public static void sendNotification(Context context, String tickerText, String title, String content, Intent intent, int NOTIFY_ID) {
 		NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-		Notification notice = new Notification(R.drawable.ic_launcher, tickerText, System.currentTimeMillis());
-		PendingIntent contentIntent = PendingIntent.getActivity(context, 0, intent, 0);
-		notice.setLatestEventInfo(context, title, content, contentIntent);
-		notice.flags |= Notification.FLAG_AUTO_CANCEL;
-		notice.flags |= Notification.DEFAULT_SOUND;
+		
+		Builder builder = new Notification.Builder(context);
+		PendingIntent contentIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		builder.setContentIntent(contentIntent);
+		builder.setSmallIcon(R.drawable.notification_small)
+		.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.notification))
+		.setTicker(tickerText)
+		.setContentTitle(title)
+		.setContentText(content)
+		.setWhen(System.currentTimeMillis())
+		.setAutoCancel(true);
+		
+		Notification notice = builder.getNotification();
+		notice.defaults |= Notification.DEFAULT_SOUND;
 		nm.notify(NOTIFY_ID, notice);
 	}
 	
