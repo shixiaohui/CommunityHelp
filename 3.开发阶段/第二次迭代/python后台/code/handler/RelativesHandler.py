@@ -27,7 +27,7 @@ class AddrelativesHandler(tornado.web.RequestHandler):
 			datainside['username'] = j['u_name']
 			datainside['info'] = j['info']
 			datainside['type'] = j['kind']
-			pushdata['data'] = datainside
+			pushdata['data'] = datainside 
 			self.application.push.pushToSingle(cid,json_encode(pushdata))
 			add_message = {'state': 1}
 			print "add relative success"
@@ -55,7 +55,7 @@ class CheckrelativesHandler(tornado.web.RequestHandler):
 				#info['avatar'] = self.application.util.getAvatarbyUid(info['id'])
 				#relatives.append('{"info":'+str(info)+',"avatar":'+self.application.util.getAvatarbyUid(info['id'])+'}')
 				relatives.append(info)
-			data={'state':1,'ralatives':relatives}
+			data={'state':1,'relatives':relatives}
 			print data
 		else:
 			data={'state':1,'relatives':'[]'}
